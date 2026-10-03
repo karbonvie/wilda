@@ -123,6 +123,6 @@ For full technical context, AI agent instructions, hardware pinout details, and 
 
 For architecture decisions, see docs/decisions/.
 For hardware notes and pinouts, see docs/hardware/.
-For weekly status, see docs/meetings/.
+For weekly status and session reports, see docs/meetings/. Each session report ends with an Operations Guide section listing all commands, tool steps, and physical board actions needed to reproduce the session, so work can resume after a 1-2 week break without re-deriving the workflow.
 For reference papers and datasheets, see docs/references/.
 */
