@@ -54,6 +54,9 @@ Current state: nRF54L15-TAG in hand, fresh firmware development starting from mi
 
   firmware/         - nRF54L15 tag firmware (production target)
   microprojects/    - isolated experiments (01-blinky through 08-end-to-end)
+    01-blinky/        - build/flash/debug verification [done]
+    02-imu-read/      - BMI270 via SPI, RTT CSV output, BTN1 System OFF, LED heartbeat [done]
+    02-imu-read-part2-ble/ - BLE wireless IMU streaming, 4G/2000dps, Python receiver [done]
   backend/          - TTN payload decoders, MQTT catcher (catcher.py), data
   hardware/         - enclosure, test fixture, BOM
   tools/            - power analysis, flash dump parser, signal gen scripts
@@ -114,7 +117,11 @@ LocoMote: https://pmc.ncbi.nlm.nih.gov/articles/PMC11615471/
 
 2026-09-06: Project structure created
 2026-09-13: agents.md created, hardware research complete, development environment defined
-Current focus: microproject 01-blinky (verify build/flash/debug on nRF54L15-TAG)
+2026-09-13: 01-blinky done - build/flash/LED blink verified, git tag blinky-working
+2026-09-22: 02-imu-read CSV output verified - BMI270 via SPI, 50Hz, print_sensor_val fix
+2026-10-03: 02-imu-read BTN1 System OFF + LED heartbeat added
+2026-10-08: 02-imu-read-part2-ble done - BLE wireless IMU streaming, 4G/2000dps, BTN/LED/System OFF
+Current focus: Edge AI Studio model training with collected IMU data
 
 
 --- 12: Repository Navigation ---
