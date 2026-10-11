@@ -3,81 +3,107 @@
 --- place this file at: ~/wilda/README.md ---
 --- human-facing project summary for GitHub visitors, researchers, collaborators ---
 
-Version 20260913_1
+Version 20261011_1
 --- 1: Overview ---
 
 WildlifeThrive (wilda) is an open-source, ultra-low-power wildlife telemetry tag project dedicated in honor of Sir David Attenborough. The goal is to create affordable, customizable tracking hardware that researchers can deploy without vendor lock-in.
 
-Traditional wildlife tracking tags are expensive, closed-source, power-hungry, and inaccessible to many researchers. wilda builds open-source alternatives using the Nordic nRF54L15 SoC, TinyML on-device behavior classification, LoRaWAN telemetry via TTN, and BLE Channel Sounding for proximity detection.
+Traditional wildlife tracking tags are expensive, closed-source, power-hungry, and inaccessible to many researchers. wilda builds open-source alternatives using the Nordic nRF54LM20A SoC, TinyML on-device behavior classification, LoRaWAN telemetry via TTN, and BLE Channel Sounding for proximity detection.
 
 
 --- 2: Target Applications ---
 
+Primary research targets:
 - Avian tracking: sub-5g tags for birds (peregrine falcons, songbirds)
-- Small mammal monitoring: ultra-light collars for squirrels, bats (4g target)
+- Bat monitoring: ultra-light tags for bats (4g target, high sample rate)
 - Marine conservation: waterproof tags for turtles, aquatic species
 - Behavioral studies: TinyML-powered classification of movement patterns
 - Environmental sensing: static nodes for habitat monitoring
 
+Training proxy animals (accessible, not research targets):
+- Dog (own) and cat (friend's): used as proxy for wild mammal behavior
+  classification. Readily available for physical tagging with permissions.
+  The pet model proves the TinyML pipeline; wild species models use
+  existing published datasets (no permits to tag wild animals).
+
 
 --- 3: Key Hardware ---
 
-Primary tag platform: Nordic nRF54L15-TAG
-  - Cortex-M33 at 128MHz + RISC-V co-processor
-  - 256KB RAM, 1.5MB flash
-  - BLE 6.0 Channel Sounding (sub-meter proximity)
-  - Onboard sensors: BME688 (environmental), BMI270 (6-axis IMU), ADXL367 (low-power accelerometer)
-  - 0.7uA sleep current, 50% radio current reduction vs nRF52
-  - CR2032 coin cell powered
+Primary platform: Seeed Studio XIAO nRF54LM20A Sense
+  - nRF54LM20A SoC: Cortex-M33 at 128MHz + RISC-V coprocessor
+  - 512 KB RAM, 2 MB NVM (RRAM), 8 MB external SPI flash
+  - BLE 6.0 Channel Sounding, Thread, Zigbee, Matter
+  - Onboard IMU: LSM6DS3TR-C (6-axis, I2C)
+  - Onboard microphone: MSM261DGT006 (PDM)
+  - nPM1300 PMIC: battery charging, fuel gauge, ship mode (0.33 uA)
+  - USB-C: flashing, debugging, data download (SAMD11 CMSIS-DAP)
+  - Deep sleep: 4.76 uA
+  - Size: 21 x 17.8 mm (compact enough for dog collar or small tag)
+  - Global RTC: runs in System OFF (0.8 uA), provides wall-clock timestamps
 
 LoRaWAN modem: RAK3172 (STM32WLE5, 915MHz US/CAN)
 LoRaWAN gateway: RAK5146 PiHAT on Raspberry Pi 5
 
-Backend: TTN MQTT -> catcher.py (Python) -> CSV with fsync -> InfluxDB -> Grafana
+Backend: TTN -> MQTT -> catcher.py (Python) -> CSV -> InfluxDB -> Grafana
 
 
 --- 4: Development Timeline ---
 
 Phase 1 (2026 Q1-Q2): nRF52840 baseline
-  Achieved 50-70 uA average current, QSPI flash logging, 32-byte hardened event format, sparse-event storage model.
+  Achieved 50-70 uA average current, QSPI flash logging, 32-byte hardened event format, sparse-event storage, LoRaWAN integration with TTN.
 
-Phase 2 (2026 Q2): LoRaWAN integration
-  RAK3172 AT command driver, OTAA join with TTN, MQTT catcher backend, stage 3 unification (QSPI logging + LoRaWAN in single image).
+Phase 2 (2026 Q3): nRF54L15-TAG exploration (archived)
+  Built and verified blinky, IMU reads (BMI270 via SPI), BLE wireless IMU streaming. Collected human walk/run/stationary data at 4G/2000dps. Archived all microprojects to archive/nrf54l15-tag-microprojects/.
 
-Phase 3 (2026 Q2-Q3): Strategic pivot to nRF54L15
-  Abandoned nRF52 due to TinyML limitations. nRF54L15 is purpose-built for edge AI with native Nordic Edge AI Studio / Neuton integration.
-
-Current state: nRF54L15-TAG in hand, fresh firmware development starting from microproject 01-blinky.
+Phase 3 (2026 Q4, current): nRF54LM20A single-SoC strategy
+  Strategic pivot to nRF54LM20A. Key enabler: 8 MB external flash on Seeed XIAO nRF54LM20A Sense provides 4.4 hours of IMU logging at 50 Hz (binary int16), eliminating BLE dropout problem for outdoor data collection. 512 KB RAM doubles TinyML model capacity. nPM1300 PMIC provides ship mode and battery charging. Hardware not yet ordered.
 
 
 --- 5: Project Structure ---
 
-  firmware/         - nRF54L15 tag firmware (production target)
-  microprojects/    - isolated experiments (01-blinky through 08-end-to-end)
-    01-blinky/        - build/flash/debug verification [done]
-    02-imu-read/      - BMI270 via SPI, RTT CSV output, BTN1 System OFF, LED heartbeat [done]
-    02-imu-read-part2-ble/ - BLE wireless IMU streaming, 4G/2000dps, Python receiver [done]
-  backend/          - TTN payload decoders, MQTT catcher (catcher.py), data
-  hardware/         - enclosure, test fixture, BOM
-  tools/            - power analysis, flash dump parser, signal gen scripts
-  docs/             - decisions, hardware notes, meetings, references
-  archive/          - nRF52 legacy code, tagged releases
+  firmware/nrf54lm20a/  - main tag firmware (production target, not yet started)
+  microprojects/        - isolated experiments for nRF54LM20A
+    01-blinky/          - build/flash/debug on XIAO [not started]
+    02-imu-read/        - LSM6DS3TR-C via I2C [not started]
+    03-imu-ble/         - BLE IMU streaming [not started]
+    04-flash-log/       - log to 8 MB external flash [not started]
+    05-data-download/   - USB-C data retrieval [not started]
+    06-sleep-current/   - deep sleep / ship mode measurement [not started]
+    07-pet-data/        - dog+cat behavior data (proxy for wild mammals) [not started]
+    08-wild-data/       - survey/acquire existing datasets for birds, bats, turtles [not started]
+    09-tinyml-train/    - multi-species parallel model training [not started]
+    10-tinyml-deploy/   - on-device inference, species-specific models [not started]
+    11-lora-uart/       - RAK3172 communication [not started]
+    12-lorawan-join/    - TTN join [not started]
+    13-end-to-end/      - full pipeline [not started]
+  backend/              - TTN decoders, MQTT catcher, data
+  hardware/             - enclosure, test fixture, BOM
+  tools/                - power analysis, flash dump parser, signal gen
+  docs/                 - decisions, hardware, meetings, references
+  archive/              - nRF52 legacy, nRF54L15-TAG microprojects, tagged releases
 
 
 --- 6: TinyML Pipeline ---
 
-1. Collect accelerometer data at 50Hz (1000+ samples per behavior class)
-2. Train model in Nordic Edge AI Studio using Neuton
-3. Target: nRF54L15, TinyML preset, model size <80KB
-4. Export as C library, integrate into nRF Connect SDK
-5. On-device inference: buffer 50 samples (1 second), classify behavior
-6. Transmit classification result via LoRaWAN only for significant events
-7. Target: <100uA average current for 1 classification/hour
+1. Log IMU data to 8 MB external flash (binary int16, 12 bytes/sample, 50 Hz)
+2. Download via USB-C, convert binary to CSV
+3. Train model in Nordic Edge AI Studio using Neuton
+4. Target: nRF54LM20A, TinyML preset, model size <80 KB
+5. Export as C library, integrate into nRF Connect SDK
+6. On-device inference: buffer 50 samples (1 second), classify behavior
+7. Transmit classification via LoRaWAN only for significant events
+8. Target: <100 uA average current for 1 classification/hour
+
+Multi-species training strategy:
+  Track A (pet proxy): Dog + cat data collected via physical tagging. Triple-tap sync, one-behavior-per-clip (30-60 sec). Dog classes: walk, trot, run, stationary, shake, jump. Cat classes: walk, run, stationary, jump/climb, groom, play. Sensor: 2G/500dps, 50 Hz. Proves the pipeline, baseline for wild mammal transfer.
+  Track B-D (wild species): Existing published datasets for birds (flight, foraging, perching), bats (flight, foraging, roosting), turtles (swimming, diving, resting). No physical tagging of wild animals (no permits). Data from Movebank, Zenodo, ICARUS, published papers.
 
 
 --- 7: Data Path ---
 
-Tag (nRF54L15) -> UART -> RAK3172 -> LoRaWAN US915 FSB2 -> TTN -> MQTT -> catcher.py -> CSV (fsync) -> InfluxDB -> Grafana
+Tag (nRF54LM20A) -> UART -> RAK3172 -> LoRaWAN US915 FSB2 -> TTN -> MQTT -> catcher.py -> CSV (fsync) -> InfluxDB -> Grafana
+
+Local logging: IMU data -> 8 MB external flash -> USB-C download -> binary-to-CSV -> Edge AI Studio
 
 Payload format: 8-byte binary (version, tag_id, event_type, flags, behavior_class, confidence, sensor_data)
 
@@ -115,13 +141,13 @@ LocoMote: https://pmc.ncbi.nlm.nih.gov/articles/PMC11615471/
 
 --- 11: Status ---
 
-2026-09-06: Project structure created
-2026-09-13: agents.md created, hardware research complete, development environment defined
-2026-09-13: 01-blinky done - build/flash/LED blink verified, git tag blinky-working
-2026-09-22: 02-imu-read CSV output verified - BMI270 via SPI, 50Hz, print_sensor_val fix
-2026-10-03: 02-imu-read BTN1 System OFF + LED heartbeat added
-2026-10-08: 02-imu-read-part2-ble done - BLE wireless IMU streaming, 4G/2000dps, BTN/LED/System OFF
-Current focus: Edge AI Studio model training with collected IMU data
+2026-09-13: 01-blinky done on nRF54L15-TAG (archived)
+2026-09-22: 02-imu-read CSV output verified on nRF54L15-TAG (archived)
+2026-10-03: 02-imu-read BTN1 System OFF + LED heartbeat on nRF54L15-TAG (archived)
+2026-10-08: 02-imu-read-part2-ble done on nRF54L15-TAG (archived)
+2026-10-08: Strategic pivot to nRF54LM20A. All nRF54L15-TAG microprojects archived. agents.md and README.md rewritten for LM20A-only strategy.
+2026-10-11: Multi-species TinyML strategy. Dogs/cats are training proxies for wild mammals. Main targets: birds, bats, turtles (existing datasets, no physical tagging). Microproject roadmap expanded to 13 folders.
+Current focus: Planning platform bring-up. Seeed XIAO nRF54LM20A Sense not yet ordered.
 
 
 --- 12: Repository Navigation ---
@@ -130,6 +156,8 @@ For full technical context, AI agent instructions, hardware pinout details, and 
 
 For architecture decisions, see docs/decisions/.
 For hardware notes and pinouts, see docs/hardware/.
-For weekly status and session reports, see docs/meetings/. Each session report ends with an Operations Guide section listing all commands, tool steps, and physical board actions needed to reproduce the session, so work can resume after a 1-2 week break without re-deriving the workflow.
+For weekly status and session reports, see docs/meetings/. Each session report ends with an Operations Guide section listing all commands, tool steps, and physical board actions needed to reproduce the session.
 For reference papers and datasheets, see docs/references/.
+For nRF54L15-TAG era microprojects, see archive/nrf54l15-tag-microprojects/.
+For nRF52 era code, see archive/nrf52-legacy/.
 */
