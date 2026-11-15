@@ -74,7 +74,7 @@ bugs are in docs/notes/ai-agent-notes.md.
 - docs/milestones.md : the authoritative dated timeline.
 - docs/decisions/ : short records of the design decisions that matter.
 - docs/images/ : screenshots and bench photos with one-line captions.
-- docs/notes/ : curated AI-agent session excerpts.
+- docs/notes/ : curated AI-agent collaboration notes.
 - scripts/ : bench utilities (mobile beacon, MQTT catcher, TTN payload decoder,
 INA219 peak-catcher, UNO R4 pulse generator, modem UART test).
 - archive/nrf52-legacy/ : dated zip backups, the primary evidence chain.
