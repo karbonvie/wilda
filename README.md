@@ -75,7 +75,7 @@ bugs are in docs/notes/ai-agent-notes.md.
 - docs/decisions/ : short records of the design decisions that matter.
 - docs/evidence/ : screenshots and bench photos with one-line captions.
 - docs/notes/ : curated AI-agent session excerpts.
-- scripts/ : bench utilities (mobile beacon, MQTT catcher,
+- scripts/ : bench utilities (mobile beacon, MQTT catcher, TTN payload decoder,
 INA219 peak-catcher, UNO R4 pulse generator, modem UART test).
 - archive/nrf52-legacy/ : dated zip backups, the primary evidence chain.
 - microprojects/ : nRF54L15 bring-up exercises (blinky, IMU, BLE IMU).

@@ -22,3 +22,4 @@ measurement claims and the LoRaWAN validation runs.
   validation (240 mV/pulse on the verified node v3).
 - rak3172e-nb2_uart1_test.ino : minimal RUI3 UART1 AT-mode
   bring-up sketch for the Zephyr-to-modem bridge.
+- ttn_payload_decoder.js : TTN uplink payload formatter, verbatim from the TTN console. Maps the 8-byte record payload (v, tag_id, event_type, flags, sensor1_mv, sensor2_mv) to the fields catcher.py writes to CSV.
