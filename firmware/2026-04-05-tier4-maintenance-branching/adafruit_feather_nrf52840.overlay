@@ -1,0 +1,28 @@
+/*
+app.overlay - Hardware Routing
+*/
+
+/ {
+    chosen {
+        /* Route system console to USB Serial only if enabled */
+        zephyr,console = &cdc_acm_uart0;
+    };
+};
+
+&zephyr_udc0 {
+    cdc_acm_uart0: cdc_acm_uart0 {
+        compatible = "zephyr,cdc-acm-uart";
+    };
+};
+
+&usbd {
+    status = "okay";   /* Enable USB Controller */
+};
+
+&adc {
+    status = "okay";   /* Keep SAADC active */
+};
+
+&uart0 {
+    status = "disabled"; /* Hard disable physical UART pins to save power */
+};
