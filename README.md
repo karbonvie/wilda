@@ -65,7 +65,7 @@ AI coding agents under direction and review. Architecture, hardware
 bring-up, provisioning, all instrumentation, and all validation were
 hands-on. Every milestone was verified on hardware before being
 archived. Curated excerpts of the agent sessions that caught real
-bugs are in docs/notes/ai-agent-excerpts.txt.
+bugs are in docs/notes/ai-agent-notes.md.
 
 ## Repository layout
 
