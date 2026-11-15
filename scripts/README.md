@@ -23,3 +23,4 @@ measurement claims and the LoRaWAN validation runs.
 - rak3172e-nb2_uart1_test.ino : minimal RUI3 UART1 AT-mode
   bring-up sketch for the Zephyr-to-modem bridge.
 - ttn_payload_decoder.js : TTN uplink payload formatter, verbatim from the TTN console. Maps the 8-byte record payload (v, tag_id, event_type, flags, sensor1_mv, sensor2_mv) to the fields catcher.py writes to CSV.
+- getcurrent_ina219_kb_v2.ino : INA219 peak-catcher, first pass. 532 us conversions (register override 0x041F), 1 s sampling windows, 10 ohm shunt, reports average and peak. v3 adds bus voltage and tight-loop polling without delay. The earlier averaging-mode sketch (128x hardware averaging, 68 ms window) whose window hid the 8 mA / 15 ms flash-write bursts was not retained as a file; the peak-catcher exists because of it.

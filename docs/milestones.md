@@ -79,7 +79,7 @@ Notes on the record:
 
 ## 2026-04 to 06: LoRaWAN end-to-end
 
-- 2026-04-29: gateway bring-up (Pi 400 + RAK5146); TTN device created
+- 2026-04-23: gateway created on TTN (Pi 400 + RAK5146); TTN device created
   2026-04-29 21:07:04, US915 FSB2.
 - 2026-05-03: nb1 RUI3 mobile beacon; coverage-probe procedure.
 - 2026-05-10: bridge dummy pass.
