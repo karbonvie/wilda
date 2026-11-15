@@ -1,0 +1,36 @@
+/*
+--- 1: Phase 2 Documentation - Autonomous Zephyr LoRaWAN FSM ---
+File Name: 20260519_feather_nrf52_Zephyr_Autonomous_TTN_FSM.zip
+
+This archive contains the validated Phase 2 firmware for the node. It transitions the nRF52840 from a manual USB passthrough tool into a fully autonomous hardware master, capable of orchestrating a RAK3172-E modem over UART without host PC intervention.
+
+--- 2: Project Goals ---
+- Establish a Finite State Machine (FSM) on the nRF52 to provision OTAA credentials and join a US915 LoRaWAN network (The Things Network).
+- Manage the RAK3172-E power lifecycle, keeping it in a 1.7uA AT+SLEEP state to preserve the network session in RAM and avoid costly re-joins.
+- Wake the modem reliably from Stop mode using a UART knock protocol.
+- Transmit a fixed 8-byte binary payload to simulate a biological sparse event.
+- Safely handle asynchronous MAC layer events and UART timing to prevent parser deadlocks.
+
+--- 3: Verified Results ---
+- The nRF52 successfully executes the OTAA handshake with TTN.
+- The Zephyr wait_for_response parser cleanly captures both standard AT parser replies (OK) and asynchronous MAC layer events (+EVT:TX_DONE), resolving earlier timeout race conditions.
+- Fixed binary payloads arrive continuously at TTN on 30-second intervals.
+- The custom TTN Javascript Payload Formatter successfully decodes the 8-byte hexadecimal string into a structured JSON row (v, tag_id, event_type, flags, sensor1_mv, sensor2_mv).
+- The modem successfully enters and exits deep sleep, confirming the low-power architecture is electrically and logically viable.
+
+--- 4: The Next Big Step ---
+The next logical phase is merging this proven RF transport slice with your existing sparse-event ADC logger codebase.
+
+Instead of a fixed 30-second loop with a dummy payload, the FSM will be driven by actual hardware interrupts (sensor wakes). The execution flow will become:
+- nRF52 wakes from deep sleep via an ADC trigger.
+- Read the ADC and write the event to the local QSPI flash using the established logger behavior.
+- Format the real millivolt readings into the 8-byte AT command string.
+- Wake the RAK, transmit the payload, and wait for the MAC confirmation.
+- Return the entire system to deep sleep.
+
+Correction since previous version:
+(Untethering The Node) ---
+To make the node truly autonomous, removed the DTR software lock. The nRF52 will still print to the USB buffer, but it will no longer care if a PC is listening.
+
+This will complete the first field-faithful vertical slice of the telemetry pipeline, proving out the hardware, the local storage, and the cloud delivery in one unified pass.
+*/
