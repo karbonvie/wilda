@@ -1,0 +1,24 @@
+/* Peripheral Status (Required by main.c) */
+&rtc2 {
+    status = "okay";
+};
+
+&adc {
+    status = "okay";
+};
+
+/* Explicitly disable unused peripherals that leak power.
+Disabling them here stops the driver initialization, but we 
+must STILL park their pins in main.c to prevent floating logic.
+*/
+&uart0 {
+    status = "disabled";
+};
+
+&usbd {
+    status = "disabled";
+};
+
+&qspi {
+    status = "disabled";
+};
