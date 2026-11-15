@@ -1,4 +1,4 @@
-# Evidence
+# Images
 
 Screenshots and bench photos backing the milestone claims. One line
 per file. File names carry the capture date. Images are added in a
