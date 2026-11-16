@@ -81,8 +81,8 @@ INA219 peak-catcher, UNO R4 pulse generator, modem UART test).
 ## Timeline and provenance
 
 This repository was assembled in November 2026 from a dated local
-archive. For pre-repo work, the dates live in docs/milestones.md, the
-zip names, and the session logs; git commit dates before 2026-09-06
+archive. For pre-repo work, the dates live in docs/milestones.md and the
+local dated archive, which is not published; git commit dates before 2026-09-06
 are archival, not work dates.
 
 ## Naming
